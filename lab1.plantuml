@@ -1,0 +1,115 @@
+@startuml lab1
+title Lab1 - Сервис Доставки Еды
+entity "User" as User {
+    * user_id : INTEGER<<PK>>
+    --
+    * email : VARCHAR(255)<<UQ>>
+    * phone_number : VARCHAR(20)<<UQ>>
+    * first_name : VARCHAR(50)
+    * last_name : VARCHAR(50)
+    * date_of_birth : DATE
+    * created_at : TIMESTAMP
+    * updated_at : TIMESTAMP
+}
+
+entity "OTP" as OTP {
+    * otp_id : INTEGER<<PK>>
+    --
+    * phone_number : VARCHAR(20)
+    * otp_code : VARCHAR(6)
+    * created_at : TIMESTAMP
+    * expires_at : TIMESTAMP
+    * is_verified : BOOLEAN
+    * attempts : INTEGER
+}
+
+entity "Addresses" as Addresses {
+    * address_id : INTEGER<<PK>>
+    --
+    * user_id : INTEGER<<FK>>
+    * city : VARCHAR(100)
+    * street : VARCHAR(255)
+    * building_number : INTEGER
+    * apartment_number : INTEGER
+    * floor : INTEGER
+    * entrance : INTEGER
+    * intercom_code : VARCHAR(20)
+    * created_at : TIMESTAMP
+    * updated_at : TIMESTAMP
+}
+
+entity "Restaurants" as Restaurants {
+    * restaurant_id : INTEGER<<PK>>
+    --
+    * name : VARCHAR(255)
+    * description : TEXT
+    * address : VARCHAR(255)
+    * phone_number : VARCHAR(20)
+    * email : VARCHAR(255)
+    * type_of_cuisine : VARCHAR(100)
+    * opening_time : TIME
+    * closing_time : TIME
+    * rating : DECIMAL(2,1)
+    * created_at : TIMESTAMP
+    * updated_at : TIMESTAMP
+}
+
+entity "Dishes" as Dishes {
+    * dish_id : INTEGER<<PK>>
+    --
+    * restaurant_id : INTEGER<<FK>>
+    * name : VARCHAR(255)
+    * description : TEXT
+    * price : DECIMAL(7,2)
+    * is_available : BOOLEAN
+    * category : VARCHAR(50)
+    * created_at : TIMESTAMP
+    * updated_at : TIMESTAMP
+}
+
+entity "Orders" as Orders {
+    * order_id : INTEGER<<PK>>
+    --
+    * user_id : INTEGER<<FK>>
+    * restaurant_id : INTEGER<<FK>>
+    * delivery_address_id : INTEGER<<FK>>
+    * courier_id : INTEGER<<FK>><<NULLABLE>>
+    * total_amount : DECIMAL(10,2)
+    * status : VARCHAR(50)
+    * created_at : TIMESTAMP
+    * updated_at : TIMESTAMP
+}
+
+entity "OrderItems" as OrderItems {
+    * order_item_id : INTEGER<<PK>>
+    --
+    * order_id : INTEGER<<FK>>
+    * dish_id : INTEGER<<FK>>
+    * quantity : INTEGER
+    * price : DECIMAL(7,2)
+    * created_at : TIMESTAMP
+    * updated_at : TIMESTAMP
+}
+
+entity "Couriers" as Couriers {
+    * courier_id : INTEGER<<PK>>
+    --
+    * first_name : VARCHAR(50)
+    * last_name : VARCHAR(50)
+    * phone_number : VARCHAR(20)
+    * vehicle_type : VARCHAR(50)
+    * is_available : BOOLEAN
+    * rating : DECIMAL(2,1)
+    * created_at : TIMESTAMP
+    * updated_at : TIMESTAMP
+}
+
+User ||--o{ Addresses : "has"
+User ||--o{ Orders: "places"
+Restaurants ||--o{ Dishes : "offers"
+Restaurants ||--o{ Orders : "receives"
+Orders ||--o{ OrderItems : "contains"
+Dishes ||--o{ OrderItems : "included in"
+Couriers ||--o{ Orders : "delivers"
+Addresses ||--o{ Orders : "used for"
+@enduml
