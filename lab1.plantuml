@@ -1,6 +1,6 @@
 @startuml lab1
 title Lab1 - Сервис Доставки Еды
-entity "User" as User {
+entity "Users" as Users {
     * user_id : INTEGER<<PK>>
     --
     * email : VARCHAR(255)<<UQ>>
@@ -104,8 +104,8 @@ entity "Couriers" as Couriers {
     * updated_at : TIMESTAMP
 }
 
-User ||--o{ Addresses : "has"
-User ||--o{ Orders: "places"
+Users ||--o{ Addresses : "has"
+Users ||--o{ Orders: "places"
 Restaurants ||--o{ Dishes : "offers"
 Restaurants ||--o{ Orders : "receives"
 Orders ||--o{ OrderItems : "contains"
